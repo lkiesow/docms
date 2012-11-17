@@ -1,0 +1,21 @@
+<h3 onClick="showDesc('%(id)s');">%(title)s</h3>
+<div class="desc" id="document-%(id)s">
+	<table>
+		<tr> <td>creator</td>     <td>%(creator)s</td> </tr>
+		<tr> <td>subject</td>     <td>%(subject)s</td> </tr>
+		<tr> <td>publisher</td>   <td>%(publisher)s</td> </tr>
+		<tr> <td>contributor</td> <td>%(contributor)s</td> </tr>
+		<tr> <td>date</td>        <td>%(date)s</td> </tr>
+		<tr> <td>type</td>        <td>%(type)s</td> </tr>
+		<tr> <td>format</td>      <td>%(format)s</td> </tr>
+		<tr> <td>identifier</td>  <td>%(identifier)s</td> </tr>
+		<tr> <td>source</td>      <td>%(source)s</td> </tr>
+		<tr> <td>language</td>    <td>%(language)s</td> </tr>
+		<tr> <td>relation</td>    <td>%(relation)s</td> </tr>
+		<tr> <td>coverage</td>    <td>%(coverage)s</td> </tr>
+		<tr> <td>rights</td>      <td>%(rights)s</td> </tr>
+		<tr> <td>tags</td>        <td>%(tags)s</td> </tr>
+	</table>
+	<p style="padding: 50px;">%(description)s</p>
+	<a style="display: inline-block;" href="./documents/%(id)s/%(filename)s">%(filename)s (%(format)s)</a>
+</div>

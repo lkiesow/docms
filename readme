@@ -1,0 +1,8 @@
+docms intends to be a lightweight document management system using mod_python.
+
+Intended features:
+ - Document upload
+ - Metadata handling
+ - Searching for documents
+ - Using XMP to add Metadata to the documents (todo)
+ - Simple user management (todo)

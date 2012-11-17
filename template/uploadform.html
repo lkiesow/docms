@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				background-color: black;
+				color: white;
+				font-family: sans-serif;
+				margin: 0px;
+				padding: 0px;
+				font-size: 10pt;
+			}
+			form {
+				max-width: 1000px;
+				background-color: #333333;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+				padding: 50px;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div style="background-color: #666666; margin-bottom: 20px; padding: 20px; padding-bottom: 40px; ">&nbsp;</div>
+
+		<form action="upload.py/upload" method="POST" enctype="multipart/form-data">
+			<input type="file" name="files" multiple="multiple" />
+			<input type="submit">
+
+			<p style="padding-top: 25px;">You can select more than one file when browsing for files.</p>
+		</form>
+
+	</body>
+</html>
