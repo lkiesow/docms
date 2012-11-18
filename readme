@@ -3,8 +3,8 @@ Docms intends to be a lightweight document management system using mod_python.
 Features:
  * Document 
    - upload
-	- download
-	- modification
+   - download
+   - modification
  * Metadata handling
  * Search for documents
 
