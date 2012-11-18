@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				background-color: black;
+				color: white;
+				font-family: sans-serif;
+				margin: 0px;
+				padding: 0px;
+				font-size: 10pt;
+			}
+			form {
+				max-width: 1000px;
+				background-color: #333333;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+				padding: 50px;
+			}
+		</style>
+	</head>
+	<body>
+
+		<div style="background-color: #666666; margin-bottom: 20px; padding: 20px; padding-bottom: 40px; ">&nbsp;</div>
+
+		<form action="delete.py/delete" method="POST" enctype="multipart/form-data">
+
+			<p>Are you shure you want to delete <br/>
+			„%(title)s“? </p>
+
+			<input type="hidden" name="id" value="%(id)s" />
+			<input type="submit" name="delete" value="Delete">
+		</form>
+
+	</body>
+</html>

@@ -7,6 +7,10 @@ import uuid
 import sqlite3
 import shutil
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 
 __dir__         = os.path.dirname(__file__)
 
@@ -45,40 +49,47 @@ def upload(req, files):
 		util.redirect(req, '..')
 
 
+
 def insert(req):
 	req.content_type = 'text/plain'
 	values = []
 	if isinstance( req.form['id'], basestring ):
-		id = str(req.form['id'])
+		id = unicode(req.form['id'])
+		if not 'use_' + id in req.form.keys():
+			util.redirect(req, '..')
 		values += [( id,
-			str(req.form['title']),     str(req.form['creator']),
-			str(req.form['subject']),   str(req.form['description']),
-			str(req.form['publisher']), str(req.form['contributor']),
-			str(req.form['date']),      str(req.form['type']), 
-			str(req.form['format']),    str(req.form['identifier']), 
-			str(req.form['source']),    str(req.form['language']),
-			str(req.form['relation']),  str(req.form['coverage']),
-			str(req.form['rights']),    str(req.form['tags']),
-			str(req.form['filename']) )]
-		os.makedirs(os.path.join(__dir__, 'documents/' + id))
+			unicode(req.form['title']),     unicode(req.form['creator']),
+			unicode(req.form['subject']),   unicode(req.form['description']),
+			unicode(req.form['publisher']), unicode(req.form['contributor']),
+			unicode(req.form['date']),      unicode(req.form['type']), 
+			unicode(req.form['format']),    unicode(req.form['identifier']), 
+			unicode(req.form['source']),    unicode(req.form['language']),
+			unicode(req.form['relation']),  unicode(req.form['coverage']),
+			unicode(req.form['rights']),    unicode(req.form['tags']),
+			unicode(req.form['filename']) )]
+		dest_dir = os.path.join(__dir__, 'documents/' + id + '/')
+		os.makedirs(dest_dir)
 		shutil.move( os.path.join(__dir__, 'tmp/' + id),
-				os.path.join(__dir__, 'documents/' + id + '/' 
-					+ str(req.form['filename']) ))
+				dest_dir + unicode(req.form['filename']) )
 	else:
 		for i in range(len(req.form['id'])):
-			values += [(                      str(req.form['id'][i]),
-				str(req.form['title'][i]),     str(req.form['creator'][i]),
-				str(req.form['subject'][i]),   str(req.form['description'][i]),
-				str(req.form['publisher'][i]), str(req.form['contributor'][i]),
-				str(req.form['date'][i]),      str(req.form['type'][i]), 
-				str(req.form['format'][i]),    str(req.form['identifier'][i]), 
-				str(req.form['source'][i]),    str(req.form['language'][i]),
-				str(req.form['relation'][i]),  str(req.form['coverage'][i]),
-				str(req.form['rights'][i]),    str(req.form['tags'][i]),
-				str(req.form['filename'][i]) )]
-			os.makedirs(os.path.join(__dir__, 'documents/' + str(req.form['id'][i])))
-			shutil.move( os.path.join(__dir__, 'tmp/' + str(req.form['id'][i])),
-					os.path.join(__dir__, 'documents/' + str(req.form['id'][i]) + '/' + str(req.form['filename'][i]) ))
+			id = unicode(req.form['id'][i])
+			if not 'use_' + id in req.form.keys():
+				continue
+			values += [( id,
+				unicode(req.form['title'][i]),     unicode(req.form['creator'][i]),
+				unicode(req.form['subject'][i]),   unicode(req.form['description'][i]),
+				unicode(req.form['publisher'][i]), unicode(req.form['contributor'][i]),
+				unicode(req.form['date'][i]),      unicode(req.form['type'][i]), 
+				unicode(req.form['format'][i]),    unicode(req.form['identifier'][i]), 
+				unicode(req.form['source'][i]),    unicode(req.form['language'][i]),
+				unicode(req.form['relation'][i]),  unicode(req.form['coverage'][i]),
+				unicode(req.form['rights'][i]),    unicode(req.form['tags'][i]),
+				unicode(req.form['filename'][i]) )]
+			dest_dir = os.path.join(__dir__, 'documents/' + id + '/')
+			os.makedirs(dest_dir)
+			shutil.move( os.path.join(__dir__, 'tmp/' + id ),
+					dest_dir + unicode(req.form['filename'][i]) )
 
 	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'), isolation_level=None)
 	cursor = conn.cursor()

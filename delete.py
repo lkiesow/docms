@@ -4,40 +4,50 @@
 import os
 import sqlite3
 from mod_python import util
+import shutil
 
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
 __dir__         = os.path.dirname(__file__)
 
 
-def index(req):
+def delete(req):
+	req.content_type = 'text/plain'
+	values = []
+	id = unicode(req.form['id'])
+
+	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'),
+			isolation_level=None)
+	cursor = conn.cursor()
+	
+	if '.' in id or '/' in id:
+		return 'Error: Wrong id!'
+
+	shutil.rmtree( os.path.join(__dir__, 'documents/' + id + '/') )
+
+	cursor.execute(u'''delete from documents where id=?''', [(id)])
+	conn.commit()
+	util.redirect(req, '..')
+
+
+def index(req, id):
 	req.content_type = 'text/html'
-	f = open( os.path.join(__dir__, 'template/index.html'), 'r' )
+	f = open( os.path.join(__dir__, 'template/delete.html'), 'r' )
 	body = f.read()
 	f.close()
 
-	# check for search parameter
-	query = "SELECT * FROM documents ORDER BY title"
-	if 'search' in req.form.keys():
-		query = "SELECT * FROM documents where title like '%" \
-				+ str(req.form['search']) + "%' or tags like '%" \
-				+ str(req.form['search']) + "%' ORDER BY title"
+	query = "SELECT * FROM documents where id = ?"
 
-	data = ''
 	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'), isolation_level=None)
 	cursor = conn.cursor()
-	f = open( os.path.join(__dir__, 'template/index.table.html'), 'r' )
-	tab = unicode(f.read()).decode('utf-8')
-	f.close()
 	for id, title, creator, subject, description, publisher, \
 		contributor, date, type, format, identifier, source, \
 		language, relation, coverage, rights, tags, filename \
-		in cursor.execute(query):
+		in cursor.execute(query, [(id)]):
 			
-		data += tab.decode('utf-8') % {
+		body = body % {
 					'id':id, 
 					'title':title,
 					'creator':creator, 
@@ -48,7 +58,7 @@ def index(req):
 					'type':type,
 					'format':format,
 					'identifier':identifier,
-					'source':'<a href="'+source+'">'+source+'</a>',
+					'source':source,
 					'language':language,
 					'relation':relation,
 					'coverage':coverage,
@@ -58,4 +68,4 @@ def index(req):
 					'filename':filename,
 					}
 
-	return body % { 'table':data }
+	return body

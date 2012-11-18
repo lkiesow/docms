@@ -1,4 +1,11 @@
-<h3 onClick="showDesc('%(id)s');">%(title)s</h3>
+<h3>
+	<table><tr>
+		<td onClick="showDesc('%(id)s');">%(title)s</td>
+		<td onclick="window.location.href = './documents/%(id)s/%(filename)s';">download</td>
+		<td onclick="window.location.href = './modify.py?id=%(id)s';">edit</td>
+		<td onclick="window.location.href = './delete.py?id=%(id)s';">delete</td>
+	</tr></table>
+</h3>
 <div class="desc" id="document-%(id)s">
 	<table>
 		<tr> <td>creator</td>     <td>%(creator)s</td> </tr>

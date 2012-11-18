@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			body {
+				background-color: black;
+				color: white;
+				font-family: sans-serif;
+				padding: 0px;
+				margin: 0px;
+			}
+			div.field {
+				display: inline-block;
+				width: 100px;
+				text-align: left;
+			}
+			input {
+				background-color: #222222;
+				color: white;
+				width: 300px;
+				border: 1px solid silver;
+				margin-top: 2px;
+			}
+			textarea {
+				background-color: #222222;
+				color: white;
+				width: 300px;
+				height: 100px;
+				border: 1px solid silver;
+				margin-top: 2px;
+			}
+			form {
+				max-width: 1000px;
+				background-color: #333333;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+				padding: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="background-color: #666666; margin-bottom: 20px; padding: 20px; padding-bottom: 40px; ">&nbsp;</div>
+
+		<form action="modify.py/modify" method="POST" enctype="multipart/form-data">
+
+			<div class="field">id:</div>          <input type="text" name="id" readonly="readonly" value="%(id)s" /> <br />
+
+			<div class="field">title:</div>       <input type="text" name="title"       placeholder="title"       value="%(filename)s" /> <br />
+			<div class="field">creator:</div>     <input type="text" name="creator"     placeholder="creator"     value="%(creator)s"    /> <br />
+			<div class="field">subject:</div>     <input type="text" name="subject"     placeholder="subject"     value="%(subject)s"    /> <br />
+			<div class="field">publisher:</div>   <input type="text" name="publisher"   placeholder="publisher"   value="%(publisher)s"  /> <br />
+			<div class="field">contributor:</div> <input type="text" name="contributor" placeholder="contributor" value="%(contributor)s"/> <br />
+			<div class="field">date:</div>        <input type="text" name="date"        placeholder="date"        value="%(date)s"       /> <br />
+			<div class="field">type:</div>        <input type="text" name="type"        placeholder="type"        value="%(type)s"       /> <br />
+			<div class="field">format:</div>      <input type="text" name="format"      placeholder="format"      value="%(format)s" /> <br />
+			<div class="field">identifier:</div>  <input type="text" name="identifier"  placeholder="identifier"  value="%(identifier)s" /> <br />
+			<div class="field">source:</div>      <input type="text" name="source"      placeholder="source"      value="%(source)s"     /> <br />
+			<div class="field">language:</div>    <input type="text" name="language"    placeholder="language"    value="%(language)s"   /> <br />
+			<div class="field">relation:</div>    <input type="text" name="relation"    placeholder="relation"    value="%(relation)s"   /> <br />
+			<div class="field">coverage:</div>    <input type="text" name="coverage"    placeholder="coverage"    value="%(coverage)s"   /> <br />
+			<div class="field">rights:</div>      <input type="text" name="rights"      placeholder="rights"      value="%(rights)s"     /> <br />
+			<div class="field">tags:</div>        <input type="text" name="tags"        placeholder="tags"        value="%(tags)s"       /> <br />
+			<div class="field">filename:</div>    <input type="text" name="filename"    readonly="readonly"       value="%(filename)s" /> <br />
+
+			<div class="field">description:</div>
+			<textarea name="description"></textarea> <br />
+
+			<p style="padding:20px;"> </p>
+
+			<input type="submit" value="Save document">
+		</form>
+
+	</body>
+</html>
