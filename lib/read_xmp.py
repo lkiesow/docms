@@ -36,7 +36,7 @@ def __get_dc( xmp ):
 	__get_dc_prop(      xmp, dc_prop, 'coverage' )
 	__get_dc_array(     xmp, dc_prop, 'creator' )
 	__get_dc_array(     xmp, dc_prop, 'date' )
-	__get_dc_lang_prop( xmp, dc_prop, 'decsription', 'en-us', 'en' )
+	__get_dc_lang_prop( xmp, dc_prop, 'description', 'en-us', 'en' )
 	__get_dc_prop(      xmp, dc_prop, 'format' )
 	__get_dc_prop(      xmp, dc_prop, 'identifier' )
 	__get_dc_array(     xmp, dc_prop, 'language' )
@@ -83,7 +83,7 @@ def fill_dc_prop( dc_prop, fill='' ):
 	dc_prop -- a dictionary to store the properties in
 	fill    -- Text to fill the elements with (default '')
 	'''
-	dc_elem = ['contributor', 'coverage', 'creator', 'date', 'decsription',
+	dc_elem = ['contributor', 'coverage', 'creator', 'date', 'description',
 			'format', 'identifier', 'language', 'publisher', 'relation', 'rights',
 			'source', 'subject', 'title', 'type']
 	for e in dc_elem:
