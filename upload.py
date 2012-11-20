@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from mod_python import util
+from mod_python import util,apache
 import uuid
 import sqlite3
 import shutil
@@ -11,8 +11,29 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
 __dir__         = os.path.dirname(__file__)
+read_xmp = apache.import_module(os.path.join(__dir__, 'lib/read_xmp.py'))
+
+
+def __store_file( fileDesc ):
+	# Generate UUID
+	id = str(uuid.uuid4())
+	# Temporary store file in filesystem
+	f = open( os.path.join(__dir__, 'tmp/' + id), 'w' )
+	f.write( fileDesc.value )
+	f.close()
+	# Get Dublin Core properties from XMP
+	props = read_xmp.get_dc_from_file( os.path.join(__dir__, 'tmp/' + id) )
+	# Fill properties with further knowledge
+	if not 'format' in props.keys():
+		props['format'] = fileDesc.type
+	if not 'title' in props.keys():
+		props['title'] = fileDesc.filename
+	props['id'] = id
+	props['filename'] = fileDesc.filename
+	read_xmp.fill_dc_prop( props )
+	# return prepared HTML
+	return props
 
 
 def upload(req, files):
@@ -28,22 +49,12 @@ def upload(req, files):
 
 	# got one file
 	if isinstance( files, util.Field ):
-		id = str(uuid.uuid4())
-		f = open( os.path.join(__dir__, 'tmp/' + id), 'w' )
-		f.write( files.value )
-		f.close()
-		x = inputform % { 'id':id, 'filename':files.filename, 'format':files.type }
-		return inputhtml % { 'inputform':x }
-
+		return inputhtml % { 'inputform' : inputform % __store_file( files ) }
 	# got more files
 	elif isinstance( files, list ):
 		body = ''
 		for f in files:
-			id = str(uuid.uuid4())
-			fi = open( os.path.join(__dir__, 'tmp/' + id), 'w' )
-			fi.write( f.value )
-			fi.close()
-			body += inputform % { 'id':id, 'filename':f.filename, 'format':f.type }
+			body += inputform % __store_file( f )
 		return inputhtml % { 'inputform':body }
 	else:
 		util.redirect(req, '..')
@@ -56,6 +67,7 @@ def insert(req):
 	if isinstance( req.form['id'], basestring ):
 		id = unicode(req.form['id'])
 		if not 'use_' + id in req.form.keys():
+			os.remove( os.path.join(__dir__, 'tmp/' + id) )
 			util.redirect(req, '..')
 		values += [( id,
 			unicode(req.form['title']),     unicode(req.form['creator']),
@@ -75,6 +87,7 @@ def insert(req):
 		for i in range(len(req.form['id'])):
 			id = unicode(req.form['id'][i])
 			if not 'use_' + id in req.form.keys():
+				os.remove( os.path.join(__dir__, 'tmp/' + id) )
 				continue
 			values += [( id,
 				unicode(req.form['title'][i]),     unicode(req.form['creator'][i]),
