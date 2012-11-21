@@ -9,8 +9,15 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
 __dir__         = os.path.dirname(__file__)
+
+__auth_realm__ = "Members only"
+
+def __auth__(req, user, passwd):
+	if user == 'eggs' and passwd == 'spam':
+		return 1
+	else:
+		return 0
 
 
 def index(req):
