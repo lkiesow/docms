@@ -14,10 +14,18 @@ __dir__         = os.path.dirname(__file__)
 __auth_realm__ = "Members only"
 
 def __auth__(req, user, passwd):
-	if user == 'eggs' and passwd == 'spam':
-		return 1
-	else:
-		return 0
+	query = "select passwd, salt from user where username='%s'" % user
+	conn = sqlite3.connect(
+			os.path.join(__dir__, 'documents/documents.db'), 
+			isolation_level=None)
+	cursor = conn.cursor()
+	for hashedpasswd, salt in cursor.execute(query):
+		import hashlib
+		sha = hashlib.sha256()
+		sha.update(passwd+salt)
+		if hashedpasswd == sha.hexdigest():
+			return 1
+	return 0
 
 
 def index(req):
@@ -34,35 +42,38 @@ def index(req):
 				+ str(req.form['search']) + "%' ORDER BY title"
 
 	data = ''
-	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'), isolation_level=None)
+	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'),
+			isolation_level=None)
 	cursor = conn.cursor()
 	f = open( os.path.join(__dir__, 'template/index.table.html'), 'r' )
 	tab = unicode(f.read()).decode('utf-8')
 	f.close()
-	for id, title, creator, subject, description, publisher, \
-		contributor, date, type, format, identifier, source, \
-		language, relation, coverage, rights, tags, filename \
+	for id, contributor, coverage, creator, date, description, format, \
+			language, publisher, relation, rights, source, subject, title, type, \
+			filename, share_with, user, visibility \
 		in cursor.execute(query):
 			
 		data += tab.decode('utf-8') % {
 					'id':id, 
-					'title':title,
-					'creator':creator, 
-					'subject':subject,
-					'publisher':publisher,
+
 					'contributor':contributor,
-					'date':date,
-					'type':type,
-					'format':format,
-					'identifier':identifier,
-					'source':'<a href="'+source+'">'+source+'</a>',
-					'language':language,
-					'relation':relation,
 					'coverage':coverage,
-					'rights':rights,
-					'tags':tags,
+					'creator':creator, 
+					'date':date,
 					'description':description,
+					'format':format,
+					'language':language,
+					'publisher':publisher,
+					'relation':relation,
+					'rights':rights,
+					'source':'<a href="'+source+'">'+source+'</a>',
+					'subject':subject,
+					'title':title,
+					'type':type,
+
 					'filename':filename,
+					'share_with':share_with,
+					'visibility':visibility,
 					}
 
 	return body % { 'table':data }

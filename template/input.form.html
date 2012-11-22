@@ -1,6 +1,8 @@
 <input type="checkbox" name="use_%(id)s" checked="checked" value="use" style="width: 20px; border: none;" />
 <div style="display: inline-block; width:390px;"></div> <br />
 
+<div style="padding: 5px;">Dublin Core</div>
+
 <div class="field">id:</div>          <input type="text" name="id" readonly="readonly" value="%(id)s" /> <br />
 
 <div class="field">title:</div>       <input type="text" name="title"       placeholder="title"       value="%(title)s"    /> <br />
@@ -17,10 +19,24 @@
 <div class="field">relation:</div>    <input type="text" name="relation"    placeholder="relation"    value="%(relation)s"    /> <br />
 <div class="field">coverage:</div>    <input type="text" name="coverage"    placeholder="coverage"    value="%(coverage)s"    /> <br />
 <div class="field">rights:</div>      <input type="text" name="rights"      placeholder="rights"      value="%(rights)s"      /> <br />
-<div class="field">tags:</div>        <input type="text" name="tags"        placeholder="tags"        value=""                /> <br />
-<div class="field">filename:</div>    <input type="text" name="filename"    placeholder="filename"    value="%(filename)s"    /> <br />
 
 <div class="field">description:</div>
 <textarea name="description">%(description)s</textarea> <br />
+
+<p></p>
+<div style="padding: 5px;">Additional fields</div>
+
+<div class="field">filename:</div>    <input type="text" name="filename"    placeholder="filename"    value="%(filename)s"    /> <br />
+<div class="field">share_with:</div>  <input type="text" name="share_with"  placeholder="share_with"  value="%(share_with)s"  /> <br />
+<div class="field">visibility:</div>  
+<select id="visibility_%(id)s">
+   <option value="0">Private</option>
+   <option value="1">Shared</option>
+   <option value="2">Users</option>
+   <option value="3">Public</option>
+</select>
+<script type="text/javascript">
+	$('#visibility_%(id)s').val('%(visibility)s');
+</script>
 
 <p style="padding:20px;"> </p>

@@ -15,6 +15,23 @@ __dir__         = os.path.dirname(__file__)
 read_xmp = apache.import_module(os.path.join(__dir__, 'lib/read_xmp.py'))
 
 
+__auth_realm__ = "Members only"
+
+def __auth__(req, user, passwd):
+	query = "select passwd, salt from user where username='%s'" % user
+	conn = sqlite3.connect(
+			os.path.join(__dir__, 'documents/documents.db'), 
+			isolation_level=None)
+	cursor = conn.cursor()
+	for hashedpasswd, salt in cursor.execute(query):
+		import hashlib
+		sha = hashlib.sha256()
+		sha.update(passwd+salt)
+		if hashedpasswd == sha.hexdigest():
+			return 1
+	return 0
+
+
 def __store_file( fileDesc ):
 	# Generate UUID
 	id = str(uuid.uuid4())
@@ -26,11 +43,13 @@ def __store_file( fileDesc ):
 	props = read_xmp.get_dc_from_file( os.path.join(__dir__, 'tmp/' + id) )
 	# Fill properties with further knowledge
 	if not 'format' in props.keys():
-		props['format'] = fileDesc.type
+		props['format']  = fileDesc.type
 	if not 'title' in props.keys():
-		props['title'] = fileDesc.filename
-	props['id'] = id
-	props['filename'] = fileDesc.filename
+		props['title']   = fileDesc.filename
+	props['id']         = id
+	props['filename']   = fileDesc.filename
+	props['share_with'] = '[]'
+	props['visibility'] = '0'
 	read_xmp.fill_dc_prop( props )
 	# return prepared HTML
 	return props
@@ -104,7 +123,8 @@ def insert(req):
 			shutil.move( os.path.join(__dir__, 'tmp/' + id ),
 					dest_dir + unicode(req.form['filename'][i]) )
 
-	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'), isolation_level=None)
+	conn = sqlite3.connect(os.path.join(__dir__, 'documents/documents.db'),
+			isolation_level=None)
 	cursor = conn.cursor()
 	cursor.executemany(u'''insert into documents (
 			id, title, creator, subject, description, publisher, contributor,
